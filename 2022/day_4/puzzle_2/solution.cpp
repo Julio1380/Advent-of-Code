@@ -27,7 +27,7 @@ int main(){
 
         twoEnd = std::stoi(duo.substr(temp, duo.size()-temp));
 
-        if((oneStart <= twoStart && oneEnd >= twoEnd)|| (oneStart >= twoStart && oneEnd <= twoEnd)){
+        if(!((oneStart > twoEnd)|| (twoStart > oneEnd))){
             totalPairs++;
         }
     }
