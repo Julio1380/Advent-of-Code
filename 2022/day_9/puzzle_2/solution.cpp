@@ -10,7 +10,7 @@ int main(){
     //visited matrix
 
     std::vector<std::vector<int>> visited(10000, std::vector<int>(10000,0));
-    int tailX = 5000, tailY = 5000, headX = 5000, headY = 5000;
+    std::vector<std::pair<int,int>> nodes(10,std::pair<int,int>(5000,5000));
     visited [5000][5000] = 1;
     int totalVisited = 0;
     std::ifstream reader("input.txt");
@@ -23,51 +23,52 @@ int main(){
         for(int i = 0; i < moves; i++){
             //head movement
             if(direction == "U"){
-                headY--;
+                nodes[0].second--;
             }else if(direction == "D"){
-                headY++;
+                nodes[0].second++;
             }else if(direction == "R"){
-                headX++;
+                nodes[0].first++;
             }else if(direction == "L"){
-                headX--;
+                nodes[0].first--;
             }
-
-            //tail movement
-            bool 
-            sameRow = tailY == headY,
-            sameCol = tailX == headX,
-            headIsRight = (headX-tailX) > 1,
-            headIsLeft = (headX-tailX) < -1,
-            headIsUp = (headY-tailY) < -1,
-            headIsDown = (headY-tailY) > 1;
-        
-
-            //same row, diff col
-            if(sameRow && headIsRight){
-                tailX++;
-            }else if(sameRow && headIsLeft){
-                tailX--;
-            }else //diff row, same col
-            if(sameCol && headIsUp){
-                tailY--;
-            }else if(sameCol && headIsDown){
-                tailY++;
-            }else //diagonal cases
-            if((headIsRight && (headY-tailY == 1)) || (headIsDown && (headX-tailX == 1))){
-                tailX++;
-                tailY++;    
-            }else if((headIsRight && (headY-tailY == -1)) || (headIsUp && (headX-tailX == 1))){
-                tailX++;
-                tailY--;
-            }else if((headIsLeft && (headY-tailY == 1)) || (headIsDown && (headX-tailX == -1))){
-                tailX--;
-                tailY++;
-            }else if((headIsLeft && (headY-tailY == -1)) || (headIsUp && (headX-tailX == -1))){
-                tailX--;
-                tailY--;
-            }
+            for(int j = 1; j < 10; j++){
+                //tail movement
+                bool 
+                sameRow = nodes[j].second == nodes[j-1].second,
+                sameCol = nodes[j].first == nodes[j-1].first,
+                headIsRight = (nodes[j-1].first-nodes[j].first) > 1,
+                headIsLeft = (nodes[j-1].first-nodes[j].first) < -1,
+                headIsUp = (nodes[j-1].second-nodes[j].second) < -1,
+                headIsDown = (nodes[j-1].second-nodes[j].second) > 1;
             
-            visited[tailX][tailY] = 1;
+
+                //same row, diff col
+                if(sameRow && headIsRight){
+                    nodes[j].first++;
+                }else if(sameRow && headIsLeft){
+                    nodes[j].first--;
+                }else //diff row, same col
+                if(sameCol && headIsUp){
+                    nodes[j].second--;
+                }else if(sameCol && headIsDown){
+                    nodes[j].second++;
+                }else //diagonal cases
+                if((headIsRight && headIsDown) || (headIsRight && (nodes[j-1].second-nodes[j].second == 1)) || (headIsDown && (nodes[j-1].first-nodes[j].first == 1))){
+                    nodes[j].first++;
+                    nodes[j].second++;    
+                }else if((headIsRight && headIsUp) || (headIsRight && (nodes[j-1].second-nodes[j].second == -1)) || (headIsUp && (nodes[j-1].first-nodes[j].first == 1))){
+                    nodes[j].first++;
+                    nodes[j].second--;
+                }else if((headIsLeft && headIsDown) || (headIsLeft && (nodes[j-1].second-nodes[j].second == 1)) || (headIsDown && (nodes[j-1].first-nodes[j].first == -1))){
+                    nodes[j].first--;
+                    nodes[j].second++;
+                }else if((headIsLeft && headIsUp) || (headIsLeft && (nodes[j-1].second-nodes[j].second == -1)) || (headIsUp && (nodes[j-1].first-nodes[j].first == -1))){
+                    nodes[j].first--;
+                    nodes[j].second--;
+                }
+            }
+            visited[nodes[9].first][nodes[9].second] = 1;
+            
         }
     }   
 
