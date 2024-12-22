@@ -1,2 +1,7 @@
 *.exe
 *.obj
+*.pdb
+sample.txt
+folders.bat
+2024/.vscode/settings.json
+2024/.vscode/tasks.json
